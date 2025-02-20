@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobi-Comm Customer Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .sidebar-nav:hover {
+            background-color: #1e40af;
+            border-radius: 0.5rem;
+        }
+        .card-zoom:hover {
+            transform: scale(1.02);
+            transition: transform 0.2s ease-in-out;
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 w-64 h-full bg-blue-800 p-4 z-50">
+        <div class="flex items-center mb-8 mt-2">
+            <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2">
+            <span class="text-xl font-bold text-white">Admin Panel</span>
+        </div>
+        
+        <nav class="space-y-4">
+            <a href="admindashboard.html#dashboard" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-tachometer-alt w-6"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="admindashboard.html#plans" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-list w-6"></i>
+                <span>Plans Management</span>
+            </a>
+            <a href="#customers" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors bg-blue-900">
+                <i class="fas fa-users w-6"></i>
+                <span>Customer Details</span>
+            </a>
+            <a href="#recharges" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-history w-6"></i>
+                <span>Recharge History</span>
+            </a>
+            <a href="#notifications" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-bell w-6"></i>
+                <span>Notifications</span>
+                <span class="notification-badge ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">Customer Details</h1>
+            <div class="flex items-center">
+                <span class="mr-4 text-gray-600">Welcome, Admin</span>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i> <a href="index.html">Logout</a>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                <div class="flex-grow">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Search by name, phone or email..." 
+                               class="w-full p-3 pl-10 border border-gray-300 rounded-lg">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <select id="planFilter" class="p-3 border border-gray-300 rounded-lg bg-white">
+                        <option value="">All Plans</option>
+                        <option value="Monthly Value Pack">Monthly Value Pack</option>
+                        <option value="5G Unlimited Plan">5G Unlimited Plan</option>
+                        <option value="Long Validity Plan">Long Validity Plan</option>
+                    </select>
+                    <button id="applyFilters" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Apply Filters
+                    </button>
+                    <button id="resetFilters" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Table -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone Number</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Plan</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Expiry Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="customersTableBody">
+                        <!-- Customer data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-6 flex justify-between items-center">
+                <p class="text-sm text-gray-700">
+                    Showing <span id="customersShown">20</span> out of <span id="totalCustomers">5,842</span> customers
+                </p>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 rounded border border-gray-300 disabled:opacity-50">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="px-3 py-1 bg-blue-600 text-white rounded">1</span>
+                    <span class="px-3 py-1 rounded border border-gray-300">2</span>
+                    <span class="px-3 py-1 rounded border border-gray-300">3</span>
+                    <span class="px-2">...</span>
+                    <span class="px-3 py-1 rounded border border-gray-300">293</span>
+                    <button class="px-3 py-1 rounded border border-gray-300">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Details Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content max-w-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold" id="customerName">Customer Details</h2>
+                <button onclick="closeCustomerModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 border-b pb-2">Personal Information</h3>
+                    <div class="space-y-3">
+                        <p><span class="font-medium">Name:</span> <span id="modalName"></span></p>
+                        <p><span class="font-medium">Phone:</span> <span id="modalPhone"></span></p>
+                        <p><span class="font-medium">Email:</span> <span id="modalEmail"></span></p>
+                        <p><span class="font-medium">Address:</span> <span id="modalAddress"></span></p>
+                        <p><span class="font-medium">Customer Since:</span> <span id="modalJoinDate"></span></p>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 border-b pb-2">Service Information</h3>
+                    <div class="space-y-3">
+                        <p><span class="font-medium">Current Plan:</span> <span id="modalPlan"></span></p>
+                        <p><span class="font-medium">Plan Activated:</span> <span id="modalActivation"></span></p>
+                        <p><span class="font-medium">Expiry Date:</span> <span id="modalExpiry"></span></p>
+                        <p><span class="font-medium">Data Used:</span> <span id="modalDataUsage"></span></p>
+                        <p><span class="font-medium">Previous Plans:</span> <span id="modalPrevPlans"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4 border-b pb-2">Recent Transactions</h3>
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalTransactions">
+                        <!-- Transactions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    <i class="fas fa-phone-alt mr-2"></i>Contact Customer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      
+const customers = [
+    { 
+        id: 1, 
+        name: "Raj", 
+        phone: "+91 98765 43210", 
+        email: "Raj.doe@example.com", 
+        currentPlan: "Monthly Value Pack", 
+        expiryDate: "2025-03-15",
+        // More customer details...
+        transactions: [
+            { date: "2025-02-15", plan: "Monthly Value Pack", amount: "₹199", status: "Successful" },
+            // More transaction history...
+        ]
+    },
+    // More customers...
+];
+
+// Function to load customers data into the HTML table
+function loadCustomers() {
+    // Get the table body element where we'll add customer rows
+    const tableBody = document.getElementById('customersTableBody');
+    // Clear any existing content
+    tableBody.innerHTML = '';
+    
+    
+    customers.forEach(customer => {
+        
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <!-- Customer avatar with initials -->
+                    <div class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-200 flex items-center justify-center">
+                        <span class="text-gray-500 font-medium">${customer.name.split(' ').map(n => n[0]).join('')}</span>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">${customer.name}</div>
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.phone}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${customer.email}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getPlanStyle(customer.currentPlan)}">
+                    ${customer.currentPlan}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(customer.expiryDate)}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button onclick="viewCustomerDetails(${customer.id})" class="text-blue-600 hover:text-blue-900 mr-3">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </td>
+        `;
+        // Add the row to the table
+        tableBody.appendChild(row);
+    });
+}
+
+// Function to get the color style for different plans
+function getPlanStyle(plan) {
+   
+    switch(plan) {
+        case 'Monthly Value Pack': return 'bg-blue-100 text-blue-800';
+        case '5G Unlimited Plan': return 'bg-purple-100 text-purple-800';
+        case 'Long Validity Plan': return 'bg-green-100 text-green-800';
+        case 'Data Booster': return 'bg-yellow-100 text-yellow-800';
+        case 'Basic Monthly': return 'bg-gray-100 text-gray-800';
+        case 'Annual Value': return 'bg-indigo-100 text-indigo-800';
+        default: return 'bg-gray-100 text-gray-800';
+    }
+}
+
+// Function to format dates in a nicer way
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
+
+// Function to show customer details in a modal popup
+function viewCustomerDetails(id) {
+    // Find the customer with the matching id
+    const customer = customers.find(c => c.id === id);
+    if (customer) {
+        // Set all the customer details in the modal
+        document.getElementById('customerName').textContent = `${customer.name}'s Details`;
+        document.getElementById('modalName').textContent = customer.name;
+        document.getElementById('modalPhone').textContent = customer.phone;
+        document.getElementById('modalEmail').textContent = customer.email;
+        document.getElementById('modalAddress').textContent = customer.address;
+        document.getElementById('modalJoinDate').textContent = formatDate(customer.joinDate);
+        document.getElementById('modalPlan').textContent = customer.currentPlan;
+        document.getElementById('modalActivation').textContent = formatDate(customer.activationDate);
+        document.getElementById('modalExpiry').textContent = formatDate(customer.expiryDate);
+        document.getElementById('modalDataUsage').textContent = customer.dataUsage;
+        document.getElementById('modalPrevPlans').textContent = customer.previousPlans;
+        
+        // Load transaction history into the modal
+        const transactionsBody = document.getElementById('modalTransactions');
+        transactionsBody.innerHTML = '';
+        customer.transactions.forEach(transaction => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-4 py-2 text-sm">${formatDate(transaction.date)}</td>
+                <td class="px-4 py-2 text-sm">${transaction.plan}</td>
+                <td class="px-4 py-2 text-sm">${transaction.amount}</td>
+                <td class="px-4 py-2 text-sm">
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        ${transaction.status === 'Successful' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                        ${transaction.status}
+                    </span>
+                </td>
+            `;
+            transactionsBody.appendChild(row);
+        });
+        
+        // Show the modal popup
+        document.getElementById('customerModal').style.display = 'block';
+    }
+}
+
+// Function to close the customer details modal
+function closeCustomerModal() {
+    document.getElementById('customerModal').style.display = 'none';
+}
+
+// Search functionality - responds as you type in the search box
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    // Get what the user typed and convert to lowercase
+    const searchTerm = e.target.value.toLowerCase();
+    const tableBody = document.getElementById('customersTableBody');
+    const rows = tableBody.getElementsByTagName('tr');
+    
+    // Check each row to see if it matches the search
+    for (let i = 0; i < rows.length; i++) {
+        const nameCell = rows[i].getElementsByTagName('td')[0];
+        const phoneCell = rows[i].getElementsByTagName('td')[1];
+        const emailCell = rows[i].getElementsByTagName('td')[2];
+        
+        if (nameCell && phoneCell && emailCell) {
+            const nameText = nameCell.textContent || nameCell.innerText;
+            const phoneText = phoneCell.textContent || phoneCell.innerText;
+            const emailText = emailCell.textContent || emailCell.innerText;
+            
+            // If any field contains the search term, show the row, otherwise hide it
+            if (nameText.toLowerCase().indexOf(searchTerm) > -1 || 
+                phoneText.toLowerCase().indexOf(searchTerm) > -1 || 
+                emailText.toLowerCase().indexOf(searchTerm) > -1) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    }
+});
+
+// Apply filters when the button is clicked
+document.getElementById('applyFilters').addEventListener('click', function() {
+    const planFilter = document.getElementById('planFilter').value;
+    const tableBody = document.getElementById('customersTableBody');
+    const rows = tableBody.getElementsByTagName('tr');
+    
+    // Check each row to see if it matches the plan filter
+    for (let i = 0; i < rows.length; i++) {
+        const planCell = rows[i].getElementsByTagName('td')[3];
+        
+        if (planCell) {
+            const planText = planCell.textContent || planCell.innerText;
+            
+            // If no filter is selected or plan matches filter, show the row
+            if (!planFilter || planText.indexOf(planFilter) > -1) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    }
+});
+
+// Reset all filters when the reset button is clicked
+document.getElementById('resetFilters').addEventListener('click', function() {
+    // Clear the search input and plan dropdown
+    document.getElementById('searchInput').value = '';
+    document.getElementById('planFilter').value = '';
+    
+    // Show all rows
+    const tableBody = document.getElementById('customersTableBody');
+    const rows = tableBody.getElementsByTagName('tr');
+    
+    for (let i = 0; i < rows.length; i++) {
+        rows[i].style.display = '';
+    }
+});
+
+// Load customers when the page finishes loading
+document.addEventListener('DOMContentLoaded', function() {
+    loadCustomers();
+});
+
+// Close modal when clicking outside of it
+window.addEventListener('click', function(event) {
+    const customerModal = document.getElementById('customerModal');
+    if (event.target === customerModal) {
+        closeCustomerModal();
+    }
+});
+    </script>
+</body>
+</html>

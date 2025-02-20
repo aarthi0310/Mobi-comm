@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobi-Comm | Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            z-index: 50;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .plan-highlight {
+            background-color: #f0f9ff;
+            border-left: 4px solid #2563eb;
+        }
+        .payment-option:hover {
+            background-color: #f0f7ff;
+            border-color: #2563eb;
+        }
+        .payment-option.selected {
+            background-color: #f0f7ff;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+        }
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .payment-form {
+            display: none;
+        }
+        .payment-form.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2">
+                <span class="text-xl font-bold text-blue-600">Mobi-Comm</span>
+            </div>
+            <div class="flex items-center space-x-8">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600 transition">Home</a>
+                <a href="plan1.html" class="text-gray-600 hover:text-blue-600 transition">Plans</a>
+                <a href="recharge.html" class="text-gray-600 hover:text-blue-600 transition">Recharge</a>
+                <a href="support.html" class="text-gray-600 hover:text-blue-600 transition">Support</a>
+                <div class="relative" id="accountDropdown">
+                    <button class="flex items-center text-gray-600 hover:text-blue-600 transition focus:outline-none" id="accountDropdownButton">
+                        Account
+                        <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="profile.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-150">Profile</a>
+                        <a href="logout.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-150">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <div class="hero-gradient pt-28 pb-12 text-center text-white">
+        <h1 class="text-4xl font-bold mb-2">Complete Your Payment</h1>
+        <p class="text-lg opacity-90 max-w-2xl mx-auto px-4">
+            Choose your preferred payment method to activate your plan
+        </p>
+    </div>
+
+    <!-- Payment Content -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+            <!-- Selected Plan Section -->
+            <div class="p-6 border-b" id="selected-plan-container">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Selected Plan</h2>
+                <div class="plan-highlight p-4 rounded-md">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-gray-600 mb-1">Plan Name:</p>
+                            <p class="font-medium text-gray-800 text-lg" id="selected-plan-name">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 mb-1">Price:</p>
+                            <p class="font-bold text-blue-700 text-lg" id="selected-plan-price">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 mb-1">Data:</p>
+                            <p class="font-medium text-gray-800" id="selected-plan-data">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 mb-1">Validity:</p>
+                            <p class="font-medium text-gray-800" id="selected-plan-validity">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="hidden" id="plan-id-container">
+                        <p class="text-xs text-gray-500 mt-4">Plan ID: <span id="selected-plan-id"></span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Methods Section -->
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Select Payment Method</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <!-- UPI Option -->
+                    <div class="payment-option border rounded-lg p-4 cursor-pointer transition-all duration-200" data-payment="upi">
+                        <div class="flex items-center">
+                            <div class="bg-blue-50 rounded-full p-3 mr-3">
+                                <i class="fas fa-mobile-alt text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">UPI</h3>
+                                <p class="text-sm text-gray-600">Pay via UPI apps</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Credit/Debit Card Option -->
+                    <div class="payment-option border rounded-lg p-4 cursor-pointer transition-all duration-200" data-payment="card">
+                        <div class="flex items-center">
+                            <div class="bg-blue-50 rounded-full p-3 mr-3">
+                                <i class="fas fa-credit-card text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">Card</h3>
+                                <p class="text-sm text-gray-600">Credit or Debit Card</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Net Banking Option -->
+                    <div class="payment-option border rounded-lg p-4 cursor-pointer transition-all duration-200" data-payment="netbanking">
+                        <div class="flex items-center">
+                            <div class="bg-blue-50 rounded-full p-3 mr-3">
+                                <i class="fas fa-university text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">Net Banking</h3>
+                                <p class="text-sm text-gray-600">All major banks</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- UPI Payment Form -->
+                <div id="upiForm" class="payment-form rounded-lg border p-6 mb-6">
+                    <h3 class="text-lg font-medium mb-4">Pay using UPI</h3>
+                    <form id="upiPaymentForm">
+                        <div class="mb-4">
+                            <label for="upiId" class="block text-sm font-medium text-gray-700 mb-1">UPI ID</label>
+                            <input type="text" id="upiId" name="upiId" placeholder="username@upi" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p class="text-xs text-gray-500 mt-1">Example: yourname@okicici or yourname@ybl</p>
+                        </div>
+                        <div class="flex items-center">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition">
+                                Complete Payment
+                            </button>
+                            
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Credit/Debit Card Payment Form -->
+                <div id="cardForm" class="payment-form rounded-lg border p-6 mb-6">
+                    <h3 class="text-lg font-medium mb-4">Pay using Credit/Debit Card</h3>
+                    <form id="cardPaymentForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="cardNumber" class="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+                                <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="cardName" class="block text-sm font-medium text-gray-700 mb-1">Name on Card</label>
+                                <input type="text" id="cardName" name="cardName" placeholder="Vadivel" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="expiryDate" class="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                                <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                                <input type="password" id="cvv" name="cvv" placeholder="310" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition">
+                                Complete Payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+    
+                <!-- Net Banking Payment Form -->
+                <div id="netBankingForm" class="payment-form rounded-lg border p-6 mb-6">
+                    <h3 class="text-lg font-medium mb-4">Pay via Net Banking</h3>
+                    <form id="netBankingForm">
+                        <div class="mb-4">
+                            <label for="bankName" class="block text-sm font-medium text-gray-700 mb-1">Select Bank</label>
+                            <select id="bankName" name="bankName" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="icici">ICICI Bank</option>
+                                <option value="hdfc">HDFC Bank</option>
+                                <option value="axis">Axis Bank</option>
+                                <option value="sbi">SBI</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition">
+                                Complete Payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Return to Plans -->
+        <div class="text-center">
+            <a href="plan1.html" class="text-blue-600 hover:text-blue-800 transition">
+                <i class="fas fa-arrow-left mr-1"></i> Return to Plans
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Account dropdown functionality
+        const accountDropdownButton = document.getElementById('accountDropdownButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        accountDropdownButton.addEventListener('click', function() {
+            dropdownMenu.classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('#accountDropdownButton') && 
+                !event.target.parentNode.matches('#accountDropdownButton')) {
+                if (dropdownMenu.classList.contains('show')) {
+                    dropdownMenu.classList.remove('show');
+                }
+            }
+        });
+        
+        // Handle selected plan display
+        document.addEventListener('DOMContentLoaded', function() {
+            // First check if plan details are in URL parameters (coming from recharge.html)
+            const urlParams = new URLSearchParams(window.location.search);
+            const planName = urlParams.get('planName');
+            const price = urlParams.get('price');
+            const data = urlParams.get('data');
+            const validity = urlParams.get('validity');
+            const phone = urlParams.get('phone');
+            
+            // If URL parameters exist, create a plan object and store it in sessionStorage
+            if (planName && price && data && validity) {
+                const selectedPlan = {
+                    planName: planName,
+                    price: price,
+                    data: data,
+                    validity: validity,
+                    planId: 'PLAN_' + Math.floor(Math.random() * 10000)
+                };
+                sessionStorage.setItem('selectedPlan', JSON.stringify(selectedPlan));
+            }
+            
+            // Retrieve the selected plan from sessionStorage
+            const selectedPlanJSON = sessionStorage.getItem('selectedPlan');
+            
+            if (selectedPlanJSON) {
+                const selectedPlan = JSON.parse(selectedPlanJSON);
+                
+                // Display selected plan details
+                document.getElementById('selected-plan-name').textContent = selectedPlan.planName;
+                document.getElementById('selected-plan-price').textContent = selectedPlan.price;
+                document.getElementById('selected-plan-data').textContent = selectedPlan.data;
+                document.getElementById('selected-plan-validity').textContent = selectedPlan.validity;
+                
+                // Optionally show plan ID (can remain hidden in production)
+                if (document.getElementById('selected-plan-id')) {
+                    document.getElementById('selected-plan-id').textContent = selectedPlan.planId;
+                    // Uncomment to show the plan ID container:
+                    // document.getElementById('plan-id-container').classList.remove('hidden');
+                }
+            } else {
+                // Handle the case when no plan is selected
+                document.getElementById('selected-plan-container').innerHTML = 
+                    '<div class="p-4 bg-red-50 text-red-700 rounded-md">' +
+                    '<p class="font-medium">No plan selected. Please <a href="plan1.html" class="text-blue-600 underline">select a plan</a> first.</p>' +
+                    '</div>';
+            }
+        });
+        
+        // Payment option click handler
+        document.querySelectorAll('.payment-option').forEach(function (option) {
+            option.addEventListener('click', function () {
+                document.querySelectorAll('.payment-option').forEach(function (el) {
+                    el.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                
+                document.querySelectorAll('.payment-form').forEach(function (form) {
+                    form.classList.remove('active');
+                });
+                
+                if (this.dataset.payment === 'upi') {
+                    document.getElementById('upiForm').classList.add('active');
+                } else if (this.dataset.payment === 'card') {
+                    document.getElementById('cardForm').classList.add('active');
+                } else if (this.dataset.payment === 'netbanking') {
+                    document.getElementById('netBankingForm').classList.add('active');
+                }
+            });
+        });
+        
+        // Set first payment option as default selected
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstPaymentOption = document.querySelector('.payment-option');
+            if (firstPaymentOption) {
+                firstPaymentOption.click();
+            }
+        });
+        
+        // Form submission handlers
+        document.getElementById('upiPaymentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            processPayment();
+        });
+        
+        document.getElementById('cardPaymentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            processPayment();
+        });
+        
+        document.getElementById('netBankingForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            processPayment();
+        });
+        
+        function processPayment() {
+            // Here you would typically handle the payment processing
+            // For demo purposes, just redirect without showing an alert
+            
+            // Get selected payment method
+            let paymentMethod = 'UPI';
+            if (document.querySelector('.payment-option[data-payment="card"].selected')) {
+                paymentMethod = 'Credit/Debit Card';
+            } else if (document.querySelector('.payment-option[data-payment="netbanking"].selected')) {
+                paymentMethod = 'Net Banking';
+            }
+            
+            // Generate a random transaction ID
+            const transactionId = 'MC' + Math.floor(Math.random() * 10000000000);
+            
+            // Get the plan information
+            const selectedPlanJSON = sessionStorage.getItem('selectedPlan');
+            if (!selectedPlanJSON) {
+                alert('No plan selected. Please select a plan first.');
+                window.location.href = 'plan1.html';
+                return;
+            }
+            
+            const selectedPlan = JSON.parse(selectedPlanJSON);
+            
+            // Get phone number from URL if coming from recharge page
+            const urlParams = new URLSearchParams(window.location.search);
+            const phone = urlParams.get('phone') || 'Unknown';
+            
+            // Store payment information in sessionStorage for the confirmation page
+            const paymentInfo = {
+                planName: selectedPlan.planName,
+                amount: selectedPlan.price,
+                paymentMethod: paymentMethod,
+                transactionId: transactionId,
+                dateTime: new Date().toLocaleString(),
+                phone: phone,
+                userEmail: 'user@example.com' // In a real app, this would come from user data
+            };
+            
+            sessionStorage.setItem('paymentInfo', JSON.stringify(paymentInfo));
+            
+            // Redirect to confirmation page
+            window.location.href = 'payment conformation.html';
+        }
+        </script>
+        

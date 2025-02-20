@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobi-Comm | Payment Confirmation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+        }
+        .success-animation {
+            animation: successPulse 2s ease-in-out;
+        }
+        @keyframes successPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            z-index: 50;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2">
+                <span class="text-xl font-bold text-blue-600">Mobi-Comm</span>
+            </div>
+    
+            <!-- Navbar Links -->
+            <div class="flex items-center space-x-8">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600 transition">Home</a>
+                <a href="plan1.html" class="text-gray-600 hover:text-blue-600 transition">Plans</a>
+                <a href="recharge.html" class="text-gray-600 hover:text-blue-600 transition">Recharge</a>
+                <a href="support.html" class="text-gray-600 hover:text-blue-600 transition">Support</a>
+    
+                <!-- Account Dropdown -->
+                <div class="relative" id="accountDropdown">
+                    <button class="flex items-center text-gray-600 hover:text-blue-600 transition focus:outline-none" id="accountDropdownButton">
+                        Account
+                        <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="profile.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-150">Profile</a>
+                        <a href="index.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-150">Logout</a>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-gray-600" id="mobileMenuButton">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Content Section -->
+    <div class="pt-24 pb-16">
+        <div class="max-w-3xl mx-auto px-4">
+            <!-- Success Card -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden text-center py-10 px-6">
+                <!-- Success Icon -->
+                <div class="success-animation inline-flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-6">
+                    <i class="fas fa-check text-4xl text-green-600"></i>
+                </div>
+                
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Payment Successful!</h1>
+                <p class="text-lg text-gray-600 mb-6">Your plan has been activated successfully.</p>
+                
+                <!-- Order Details -->
+                <div class="bg-gray-50 rounded-lg p-6 mb-8 max-w-md mx-auto">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4 text-left">Order Details</h2>
+                    
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">Plan</span>
+                        <span class="font-medium text-gray-800" id="confirmPlanName">Loading...</span>
+                    </div>
+                    
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">Amount Paid</span>
+                        <span class="font-medium text-gray-800" id="confirmAmount">Loading...</span>
+                    </div>
+                    
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">Payment Method</span>
+                        <span class="font-medium text-gray-800" id="confirmPaymentMethod">Loading...</span>
+                    </div>
+                    
+                    <div class="flex justify-between mb-3">
+                        <span class="text-gray-600">Transaction ID</span>
+                        <span class="font-medium text-gray-800" id="confirmTransactionId">Loading...</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Date & Time</span>
+                        <span class="font-medium text-gray-800" id="confirmDateTime">Loading...</span>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <a href="index.html" class="bg-blue-600 text-white text-lg font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition">
+                        Done
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to Toggle Dropdown and Update Order Details -->
+    <script>
+        // Dropdown Menu functionality
+        document.getElementById("accountDropdownButton").addEventListener("click", function() {
+            const dropdownMenu = document.getElementById("dropdownMenu");
+            dropdownMenu.classList.toggle("show");
+        });
+
+        // Close dropdown if clicked outside
+        window.addEventListener("click", function(event) {
+            if (!event.target.closest("#accountDropdown")) {
+                const dropdownMenu = document.getElementById("dropdownMenu");
+                dropdownMenu.classList.remove("show");
+            }
+        });
+
+        // Function to update payment confirmation details
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get payment information from sessionStorage
+            const paymentInfoJSON = sessionStorage.getItem('paymentInfo');
+            
+            if (paymentInfoJSON) {
+                const paymentInfo = JSON.parse(paymentInfoJSON);
+                
+                // Update the confirmation details with the payment information
+                document.getElementById('confirmPlanName').textContent = paymentInfo.planName || 'N/A';
+                document.getElementById('confirmAmount').textContent = paymentInfo.amount || 'N/A';
+                document.getElementById('confirmPaymentMethod').textContent = paymentInfo.paymentMethod || 'N/A';
+                document.getElementById('confirmTransactionId').textContent = paymentInfo.transactionId || 'N/A';
+                document.getElementById('confirmDateTime').textContent = paymentInfo.dateTime || getCurrentDateTime();
+            } else {
+                // If no payment info in session storage, use current date/time
+                document.getElementById('confirmDateTime').textContent = getCurrentDateTime();
+                
+                // Set default values or placeholders for other fields
+                document.getElementById('confirmPlanName').textContent = 'Plan information not available';
+                document.getElementById('confirmAmount').textContent = 'Amount information not available';
+                document.getElementById('confirmPaymentMethod').textContent = 'Payment method not available';
+                document.getElementById('confirmTransactionId').textContent = 'Transaction ID not available';
+            }
+        });
+
+        // Function to get current date and time in a readable format
+        function getCurrentDateTime() {
+            const now = new Date();
+            
+            // Format: Month DD, YYYY, HH:MM
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit'
+            };
+            
+            return now.toLocaleDateString('en-US', options);
+        }
+    </script>
+</body>
+</html>

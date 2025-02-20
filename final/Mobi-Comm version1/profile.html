@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobi-Comm | Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 32px;
+            width: 32px;
+        }
+
+        .logo span {
+            color: #2563eb;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #4b5563;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-button {
+            background: none;
+            border: none;
+            color: #4b5563;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 16px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 8px 0;
+        }
+
+        .dropdown-content a {
+            color: #4b5563;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f0f7ff;
+            color: #2563eb;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+            padding: 120px 20px 48px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .profile-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .profile-card h2 {
+            color: #1f2937;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .info-group {
+            margin-bottom: 16px;
+        }
+
+        .info-label {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f0f7ff;
+            color: #2563eb;
+            border-radius: 16px;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .edit-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .edit-button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <img src="logo.webp" alt="Mobi-Comm Logo">
+                <span>Mobi-Comm</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="plan1.html">Plans</a>
+                <a href="recharge.html">Recharge</a>
+                <a href="support.html">Support</a>
+                <div class="dropdown">
+                    <button class="dropdown-button" onclick="toggleDropdown()">
+                        Account
+                        <span>▼</span>
+                    </button>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <a href="profile.html">Profile</a>
+                        <a href="logout.html">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>My Profile</h1>
+        <p>Manage your account and view your current plan</p>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-grid">
+            <div class="profile-card">
+                <h2>Personal Information</h2>
+                <div class="info-group">
+                    <p class="info-label">Name</p>
+                    <p class="info-value" id="profileName">Aarthi V</p>
+                </div>
+                <div class="info-group">
+                    <p class="info-label">Email</p>
+                    <p class="info-value" id="profileEmail">aarthivadivel@gmail.com</p>
+                </div>
+                <div class="info-group">
+                    <p class="info-label">Phone Number</p>
+                    <p class="info-value" id="profilePhone">Not set</p>
+                </div>
+                <button class="edit-button">Edit Profile</button>
+            </div>
+
+            <div class="profile-card">
+                <h2>Current Plan</h2>
+                <div class="info-group">
+                    <p class="info-label">Plan Name</p>
+                    <p class="info-value" id="planName">Not set</p>
+                </div>
+                <div class="info-group">
+                    <p class="info-label">Data</p>
+                    <p class="info-value" id="planData">Not set</p>
+                </div>
+                <div class="info-group">
+                    <p class="info-label">Validity</p>
+                    <p class="info-value" id="planValidity">Not set</p>
+                </div>
+                <div class="info-group">
+                    <p class="info-label">Status</p>
+                    <span class="plan-badge" id="planStatus">Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dropdown functionality
+        function toggleDropdown() {
+            document.getElementById("dropdownMenu").classList.toggle("show");
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-button')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // Load user data from sessionStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default user info
+            const defaultUser = {
+                name: "Aarthi V",
+                email: "aarthivadivel@gmail.com",
+                phone: sessionStorage.getItem('phoneNumber') || "Not set"
+            };
+
+            // Display user info
+            document.getElementById('profileName').textContent = defaultUser.name;
+            document.getElementById('profileEmail').textContent = defaultUser.email;
+            document.getElementById('profilePhone').textContent = defaultUser.phone;
+
+            // Get and display plan info from sessionStorage
+            const planInfo = JSON.parse(sessionStorage.getItem('selectedPlan'));
+            if (planInfo) {
+                document.getElementById('planName').textContent = planInfo.planName;
+                document.getElementById('planData').textContent = planInfo.data;
+                document.getElementById('planValidity').textContent = planInfo.validity;
+            }
+        });
+    </script>
+</body>
+</html>
