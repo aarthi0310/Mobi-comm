@@ -51,8 +51,10 @@
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2">
-                    <span class="text-xl font-bold text-blue-600">Mobi-Comm</span>
+                    <a href="index.html">
+                    <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2"></a>
+                    <a href="index.html">
+                    <span class="text-xl font-bold text-blue-600">Mobi-Comm</span></a>
                 </div>
 
                 <div class="hidden md:flex items-center space-x-8">
@@ -69,7 +71,7 @@
                             </svg>
                         </button>
                         <div class="dropdown-menu absolute right-0 bg-white shadow-lg py-2 w-40 rounded-lg">
-                            <a href="index.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 rounded">Logout</a>
+                            <a href="login.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 rounded">Login</a>
                         </div>
                     </div>
                     
@@ -93,20 +95,20 @@
                 <form id="supportForm" class="space-y-6">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
-                        <input type="text" id="name" name="name" required
+                        <input type="text" id="name" name="name" 
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
                     </div>
 
                     <div>
                         <label for="mobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
-                        <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" required
+                        <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
                         <p id="mobileError" class="text-red-500 text-sm mt-1 hidden">Please enter a valid 10-digit number</p>
                     </div>
 
                     <div>
                         <label for="issueType" class="block text-sm font-medium text-gray-700 mb-1">Type of Issue</label>
-                        <select id="issueType" name="issueType" required
+                        <select id="issueType" name="issueType" 
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
                             <option value="">Select an issue</option>
                             <option value="network">Network Issues</option>
@@ -119,7 +121,7 @@
 
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Describe Your Issue</label>
-                        <textarea id="description" name="description" rows="4" required
+                        <textarea id="description" name="description" rows="4" 
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
                     </div>
 
@@ -143,8 +145,8 @@
 
         <div class="faq-item">
             <p class="faq-question">How can I contact customer support?</p>
-            <p class="faq-answer">Email: support@mobi-comm.com,
-                Call: 1800-XXX-XXXX (Toll-Free).</p>
+            <p class="faq-answer">Email: support@mobi-comm.com
+               </p>
         </div>
 
         <div class="faq-item">
@@ -159,35 +161,125 @@
     </div>
 
     <script>
-    document.getElementById("accountDropdownButton").addEventListener("click", function () {
-        let dropdownMenu = document.querySelector(".dropdown-menu");
-        if (dropdownMenu.style.display === "block") {
-            dropdownMenu.style.display = "none";
+  document.getElementById("accountDropdownButton").addEventListener("click", function () {
+    let dropdownMenu = document.querySelector(".dropdown-menu");
+    if (dropdownMenu.style.display === "block") {
+        dropdownMenu.style.display = "none";
+    } else {
+        dropdownMenu.style.display = "block";
+    }
+});
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (event) {
+    let dropdown = document.querySelector(".dropdown");
+    if (!dropdown.contains(event.target)) {
+        document.querySelector(".dropdown-menu").style.display = "none";
+    }
+});
+
+document.querySelectorAll(".faq-question").forEach(item => {
+    item.addEventListener("click", function () {
+        let answer = this.nextElementSibling;
+        if (answer.style.display === "block") {
+            answer.style.display = "none";
         } else {
-            dropdownMenu.style.display = "block";
+            answer.style.display = "block";
+        }
+    });
+});
+
+document.getElementById("supportForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevents actual form submission
+
+    let name = document.getElementById("name").value.trim();
+    let mobile = document.getElementById("mobile").value.trim();
+    let issueType = document.getElementById("issueType").value;
+    let description = document.getElementById("description").value.trim();
+
+    let mobileError = document.getElementById("mobileError");
+
+    let nameError = createErrorElement("nameError", "Please enter your name.");
+    let issueTypeError = createErrorElement("issueTypeError", "Please select the type of issue.");
+    let descriptionError = createErrorElement("descriptionError", "Please describe your issue.");
+
+    let isValid = true;
+
+    // Clear previous error messages
+    clearErrorMessages();
+
+    // Name Validation
+    if (name === "") {
+        showError("name", nameError);
+        isValid = false;
+    }
+
+    // Mobile Number Validation
+    if (mobile === "") {
+        mobileError.innerText = "Please enter your mobile number.";
+        mobileError.classList.remove("hidden");
+        isValid = false;
+    } else if (!/^\d{10}$/.test(mobile)) {
+        mobileError.innerText = "Invalid mobile number. Must be 10 digits.";
+        mobileError.classList.remove("hidden");
+        isValid = false;
+    } else {
+        mobileError.classList.add("hidden");
+    }
+
+    // Issue Type Validation
+    if (issueType === "") {
+        showError("issueType", issueTypeError);
+        isValid = false;
+    }
+
+    // Description Validation
+    if (description === "") {
+        showError("description", descriptionError);
+        isValid = false;
+    }
+
+    // If form is valid, show pop-up message and reset form
+    if (isValid) {
+        alert("Your request has been submitted! Our team will contact you soon.");
+        document.getElementById("supportForm").reset(); // Reset the form after successful submission
+    }
+});
+
+// Function to create an error message element in red if it doesn't exist
+function createErrorElement(id, message) {
+    let existingError = document.getElementById(id);
+    if (!existingError) {
+        let errorElement = document.createElement("p");
+        errorElement.id = id;
+        errorElement.className = "text-red-500 text-sm mt-1";
+        errorElement.innerText = message;
+        return errorElement;
+    }
+    return existingError;
+}
+
+// Function to show error under the corresponding field
+function showError(fieldId, errorElement) {
+    let field = document.getElementById(fieldId);
+    if (field && field.parentNode) {
+        field.parentNode.appendChild(errorElement);
+    }
+}
+
+// Function to clear previous error messages
+function clearErrorMessages() {
+    let errorIds = ["nameError", "issueTypeError", "descriptionError"];
+    errorIds.forEach(id => {
+        let errorElement = document.getElementById(id);
+        if (errorElement) {
+            errorElement.remove();
         }
     });
 
-    // Close dropdown when clicking outside
-    document.addEventListener("click", function (event) {
-        let dropdown = document.querySelector(".dropdown");
-        if (!dropdown.contains(event.target)) {
-            document.querySelector(".dropdown-menu").style.display = "none";
-        }
-    });
-    
-    document.querySelectorAll(".faq-question").forEach(item => {
-        item.addEventListener("click", function () {
-            let answer = this.nextElementSibling;
-            if (answer.style.display === "block") {
-                answer.style.display = "none";
-            } else {
-                answer.style.display = "block";
-            }
-        });
-    });
-
-
+    // Ensure mobile error is hidden if previously shown
+    document.getElementById("mobileError").classList.add("hidden");
+}
 </script>
 </body>
 </html>

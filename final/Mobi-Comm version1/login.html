@@ -3,73 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobi-Comm | Login</title>
+    <title>Mobi-Comm Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <style>
         .hero-gradient {
             background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
         }
-
-        .feature-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .slide-in {
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .login-card {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
         }
-        body{
-            background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
-        }
-
-        .error-message {
-            color: red;
-            font-size: 0.875rem;
-            margin-top: 5px;
-        }
-
-        .input-error {
-            border-color: red;
-        }
-        
-        /* Dropdown menu style */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            width: 150px;
-            background: white;
-            border-radius: 0.375rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 0.5rem 0;
-            z-index: 50;
-        }
-        
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -77,422 +22,290 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
-
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .success-message {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
         }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-lg fixed w-full z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2">
-                    <span class="text-xl font-bold text-blue-600">Mobi-Comm</span>
-                </div>
-                
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="text-gray-600 hover:text-blue-600 transition">Home</a>
-                    <a href="plans.html" class="text-gray-600 hover:text-blue-600 transition">Plans</a>
-                    <a href="recharge.html" class="text-gray-600 hover:text-blue-600 transition">Recharge</a>
-                    <a href="support.html" class="text-gray-600 hover:text-blue-600 transition">Support</a>
-                    
-                    <!-- Account Dropdown -->
-                    <div class="dropdown relative" id="accountDropdown">
-                        <button class="flex items-center text-gray-600 hover:text-blue-600 transition" id="accountDropdownButton">
-                            Account
-                            <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a href="login.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 rounded">Login</a>
-                            <a href="index.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 rounded">Logout</a>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="md:hidden text-gray-600" id="mobileMenuButton">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    <!-- Main Container -->
+    <div class="min-h-screen hero-gradient flex items-center justify-center px-4 py-12">
+        <div class="login-card bg-white rounded-xl overflow-hidden fade-in">
+            <!-- Header -->
+            <div class="p-6 text-center">
+                <div class="flex justify-center mb-4">
+                    <svg class="w-12 h-12 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                     </svg>
-                </button>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">Welcome to Mobi-Comm</h1>
+                <p class="text-gray-600 mt-1">Please login with your mobile number</p>
             </div>
-        </div>
 
-        <!-- Mobile Menu -->
-        <div class="md:hidden hidden" id="mobileMenu">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#" class="block px-3 py-2 text-gray-600 hover:bg-blue-50 rounded">Home</a>
-                <a href="plan1.html" class="block px-3 py-2 text-gray-600 hover:bg-blue-50 rounded">Plans</a>
-                <a href="#" class="block px-3 py-2 text-gray-600 hover:bg-blue-50 rounded">Recharge</a>
-                <a href="#" class="block px-3 py-2 text-gray-600 hover:bg-blue-50 rounded">Support</a>
-                <div class="px-3 py-2">
-                    <button class="flex items-center w-full text-left text-gray-600" id="mobileAccountButton">
-                        Account
-                        <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            <!-- Phone Number Form -->
+            <div class="p-6" id="phoneForm">
+                <form id="mobileForm" class="space-y-4">
+                    <div>
+                        <label for="mobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">+91</span>
+                            <input
+                                type="tel"
+                                id="mobile"
+                                class="pl-12 pr-4 py-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Enter 10 digit mobile number"
+                                maxlength="10"
+                            >
+                        </div>
+                        <p id="mobileError" class="text-red-500 text-sm mt-1 hidden">Please enter a valid 10-digit number</p>
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+                    >
+                        Get OTP
+                    </button>
+                </form>
+            </div>
+
+            <!-- OTP Verification Form -->
+            <div class="p-6 hidden" id="otpForm">
+                <div class="flex items-center mb-4">
+                    <button id="backButton" class="text-blue-600 hover:text-blue-800">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                         </svg>
                     </button>
-                    <div class="pl-4 hidden" id="mobileAccountMenu">
-                        <a href="login.html" class="block px-3 py-2 text-gray-600 hover:bg-blue-50 rounded">Login</a>
-                    </div>
+                    <span class="ml-2 text-gray-600">Enter OTP sent to <span id="phoneDisplay" class="font-medium"></span></span>
                 </div>
+                <form id="otpVerifyForm" class="space-y-4">
+                    <div class="flex justify-center space-x-3">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:ring-2 focus:ring-blue-500 otp-input" data-index="0">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:ring-2 focus:ring-blue-500 otp-input" data-index="1">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:ring-2 focus:ring-blue-500 otp-input" data-index="2">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:ring-2 focus:ring-blue-500 otp-input" data-index="3">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:ring-2 focus:ring-blue-500 otp-input" data-index="4">
+                        <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:ring-2 focus:ring-blue-500 otp-input" data-index="5">
+                    </div>
+                    <p id="otpError" class="text-red-500 text-sm text-center hidden">Invalid OTP. Please try again.</p>
+                    <button
+                        type="submit"
+                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+                    >
+                        Verify OTP
+                    </button>
+                    <div class="flex justify-between items-center text-sm">
+                        <span id="timer" class="text-gray-600">Time remaining: 10:00</span>
+                        <button
+                            type="button"
+                            id="resendButton"
+                            class="text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled
+                        >
+                            Resend OTP
+                        </button>
+                    </div>
+                </form>
             </div>
-        </div>
-    </nav>
 
-    <!-- Login Form Section -->
-    <div class="pt-24 pb-12 min-h-screen flex items-center justify-center">
-        <div class="max-w-md w-full mx-auto px-4 sm:px-6">
-            <div class="login-card bg-white rounded-xl overflow-hidden">
-                <div class="hero-gradient py-6 px-8 text-center">
-                    <h1 class="text-2xl font-bold text-white slide-in">Welcome Back</h1>
-                    <p class="text-white opacity-90 slide-in">Login with OTP verification</p>
-                </div>
-                
-                <!-- Initial Form - Phone Input -->
-                <div class="py-8 px-8" id="phoneForm">
-                    <form id="mobileForm" class="space-y-6">
-                        <div>
-                            <label for="mobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
-                            <input
-                                id="mobile"
-                                name="mobile"
-                                type="tel"
-                                autocomplete="tel"
-                                placeholder="Enter your 10-digit mobile number"
-                                required
-                                class="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm 
-                                       placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            >
-                            <p id="mobileError" class="error-message hidden">Please enter a valid 10-digit mobile number.</p>
-                        </div>
-                        
-                        <div>
-                            <button
-                                type="submit"
-                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm 
-                                       text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none 
-                                       focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            >
-                                Send OTP
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- OTP Verification Form -->
-                <div class="py-8 px-8 hidden" id="otpForm">
-                    <p class="text-sm text-gray-600 mb-4">A 6-digit OTP has been sent to your mobile number.</p>
-                    <form id="verifyOtpForm" class="space-y-6">
-                        <div>
-                            <label for="otp" class="block text-sm font-medium text-gray-700 mb-1">Enter OTP</label>
-                            <input
-                                id="otp"
-                                name="otp"
-                                type="text"
-                                placeholder="Enter 6-digit OTP"
-                                required
-                                class="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm 
-                                       placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                maxlength="6"
-                            >
-                            <p id="otpError" class="error-message hidden">Please enter a valid OTP.</p>
-                        </div>
-                        
-                        <div>
-                            <button
-                                type="submit"
-                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm 
-                                       text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none 
-                                       focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            >
-                                Verify OTP
-                            </button>
-                        </div>
-
-                        <div class="text-center">
-                            <button type="button" id="resendOtp" class="text-blue-600 hover:text-blue-800 text-sm">
-                                Resend OTP
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Success Message -->
-                <div id="successMessage" class="hidden py-8 px-8">
-                    <div class="mt-4 p-4 bg-green-100 text-green-800 rounded text-center">
-                        <svg class="mx-auto h-12 w-12 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <p class="font-medium">Login successful!</p>
-                        <p class="text-sm mt-2">Redirecting to your account...</p>
-                    </div>
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message p-6 text-center">
+                <div class="bg-green-100 rounded-lg p-4">
+                    <svg class="w-12 h-12 text-green-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <h3 class="text-green-800 font-medium mb-2">Login Successful!</h3>
+                   
                 </div>
             </div>
         </div>
     </div>
 
     <!-- OTP Modal -->
-    <div class="modal" id="otpModal">
-        <div class="modal-content">
-            <h2 class="text-xl font-bold mb-4">Your OTP Code</h2>
-            <p class="text-gray-600 mb-2">Use this code to verify your login:</p>
-            <div class="text-3xl font-bold text-blue-600 mb-6" id="otpDisplay"></div>
-            <p class="text-sm text-gray-500">This code will expire in 10 minutes</p>
-            <button id="closeOtpModal" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                Close
-            </button>
+    <div id="otpModal" class="modal">
+        <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 w-11/12 max-w-sm">
+            <div class="text-center">
+                <h3 class="text-lg font-semibold mb-2">Your OTP Code</h3>
+                <p class="text-gray-600 mb-4">Use this code to verify your login:</p>
+                <div id="otpDisplay" class="text-3xl font-bold text-blue-600 mb-4"></div>
+                <p class="text-sm text-gray-500 mb-4">This code will expire in 10 minutes</p>
+                <button
+                    id="closeModal"
+                    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+                >
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 
-    
     <script>
-        // --------- STEP 1: GET ALL THE HTML ELEMENTS WE NEED ---------
+        // DOM Elements
+const mobileForm = document.getElementById('mobileForm');
+const otpVerifyForm = document.getElementById('otpVerifyForm');
+const phoneForm = document.getElementById('phoneForm');
+const otpForm = document.getElementById('otpForm');
+const successMessage = document.getElementById('successMessage');
+const mobileInput = document.getElementById('mobile');
+const mobileError = document.getElementById('mobileError');
+const otpError = document.getElementById('otpError');
+const phoneDisplay = document.getElementById('phoneDisplay');
+const otpModal = document.getElementById('otpModal');
+const otpDisplay = document.getElementById('otpDisplay');
+const closeModal = document.getElementById('closeModal');
+const backButton = document.getElementById('backButton');
+const resendButton = document.getElementById('resendButton');
+const timer = document.getElementById('timer');
+const otpInputs = document.querySelectorAll('.otp-input');
+
+let currentOTP = '';
+let timerInterval;
+let timeLeft = 600; // 10 minutes in seconds
+let resendTimeLeft = 5; // 5 seconds for resend timer
+let resendTimerInterval;
+
+// Helper Functions
+function generateOTP() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+}
+
+function startResendTimer() {
+    clearInterval(resendTimerInterval);
+    resendTimeLeft = 5;
+    resendButton.disabled = true;
+    
+    resendTimerInterval = setInterval(() => {
+        resendTimeLeft--;
+        resendButton.textContent = `Resend OTP (${resendTimeLeft}s)`;
         
-        // Mobile menu elements
-        var mobileMenuButton = document.getElementById('mobileMenuButton');
-        var mobileMenu = document.getElementById('mobileMenu');
+        if (resendTimeLeft <= 0) {
+            clearInterval(resendTimerInterval);
+            resendButton.disabled = false;
+            resendButton.textContent = 'Resend OTP';
+        }
+    }, 1000);
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    timeLeft = 600;
+    startResendTimer();
+    
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        timer.textContent = `Time remaining: ${formatTime(timeLeft)}`;
         
-        // Mobile account menu elements
-        var mobileAccountButton = document.getElementById('mobileAccountButton');
-        var mobileAccountMenu = document.getElementById('mobileAccountMenu');
-        
-        // Desktop dropdown elements
-        var accountDropdown = document.getElementById('accountDropdown');
-        var accountDropdownButton = document.getElementById('accountDropdownButton');
-        var dropdownMenu = accountDropdown.querySelector('.dropdown-menu');
-        
-        // Forms and form elements
-        var mobileForm = document.getElementById('mobileForm');
-        var verifyOtpForm = document.getElementById('verifyOtpForm');
-        var phoneFormSection = document.getElementById('phoneForm');
-        var otpFormSection = document.getElementById('otpForm');
-        var successMessageSection = document.getElementById('successMessage');
-        
-        // Input fields
-        var mobileInput = document.getElementById('mobile');
-        var otpInput = document.getElementById('otp');
-        
-        // Error message elements
-        var mobileError = document.getElementById('mobileError');
-        var otpError = document.getElementById('otpError');
-        
-        // Modal elements
-        var otpModal = document.getElementById('otpModal');
-        var closeOtpModalButton = document.getElementById('closeOtpModal');
-        var otpDisplay = document.getElementById('otpDisplay');
-        
-        // Resend OTP button
-        var resendOtpButton = document.getElementById('resendOtp');
-        
-        // --------- STEP 2: IMPORTANT VARIABLES TO STORE DATA ---------
-        
-        // Variable to store the generated OTP
-        var generatedOtp;
-        
-        // Variable to store the user's mobile number
-        var userMobileNumber;
-        
-        
-        // --------- STEP 3: MOBILE MENU FUNCTIONALITY ---------
-        
-        // When the mobile menu button is clicked, show/hide the mobile menu
-        mobileMenuButton.addEventListener('click', function() {
-            // If the menu has the 'hidden' class, remove it (show menu)
-            // If the menu doesn't have the 'hidden' class, add it (hide menu)
-            mobileMenu.classList.toggle('hidden');
-        });
-        
-        
-        // --------- STEP 4: MOBILE ACCOUNT MENU FUNCTIONALITY ---------
-        
-        // When the mobile account button is clicked, show/hide the account submenu
-        mobileAccountButton.addEventListener('click', function() {
-            // Toggle the 'hidden' class on the mobile account menu
-            mobileAccountMenu.classList.toggle('hidden');
-        });
-        
-        
-        // --------- STEP 5: DESKTOP DROPDOWN MENU FUNCTIONALITY ---------
-        
-        // When the account dropdown button is clicked, show/hide the dropdown menu
-        accountDropdownButton.addEventListener('click', function(event) {
-            // Prevent the default behavior of the link (prevent page reload)
-            event.preventDefault();
-            
-            // Check if the dropdown menu is currently hidden
-            var isMenuHidden = (dropdownMenu.style.display === 'none' || !dropdownMenu.style.display);
-            
-            // If menu is hidden, show it. Otherwise, hide it
-            if (isMenuHidden) {
-                dropdownMenu.style.display = 'block';
-            } else {
-                dropdownMenu.style.display = 'none';
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timer.textContent = 'OTP expired';
+            resendButton.disabled = false;
+            resendButton.textContent = 'Resend OTP';
+        }
+    }, 1000);
+}
+
+function showSuccessAndRedirect() {
+    otpForm.style.display = 'none';
+    successMessage.style.display = 'block';
+    
+    localStorage.setItem('userMobile', mobileInput.value.trim());
+    
+    setTimeout(() => {
+        window.location.href = 'plan1.html';
+    }, 2000);
+}
+
+// Event Listeners
+mobileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const mobile = mobileInput.value.trim();
+    
+    if (!/^[0-9]{10}$/.test(mobile)) {
+        mobileError.classList.remove('hidden');
+        return;
+    }
+    
+    mobileError.classList.add('hidden');
+    phoneDisplay.textContent = `+91 ${mobile.slice(0, 5)}XXXXX`;
+    currentOTP = generateOTP();
+    otpDisplay.textContent = currentOTP;
+    otpModal.style.display = 'block';
+    phoneForm.classList.add('hidden');
+    otpForm.classList.remove('hidden');
+    startTimer();
+});
+
+otpInputs.forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+        if (e.target.value) {
+            if (index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
             }
-        });
-        
-        // Hide dropdown when clicking anywhere else on the page
-        document.addEventListener('click', function(event) {
-            // Check if the click was outside the account dropdown
-            if (!accountDropdown.contains(event.target)) {
-                // Hide the dropdown menu
-                dropdownMenu.style.display = 'none';
-            }
-        });
-        
-        
-        // --------- STEP 6: MOBILE NUMBER FORM SUBMISSION ---------
-        
-        // When the mobile form is submitted
-        mobileForm.addEventListener('submit', function(event) {
-            // Prevent the form from actually submitting (which would reload the page)
-            event.preventDefault();
-            
-            // Get the mobile number value and remove any extra spaces
-            var mobileNumber = mobileInput.value.trim();
-            
-            // Hide any previous error message
-            mobileError.classList.add('hidden');
-            
-            // Remove any previous error styling
-            mobileInput.classList.remove('input-error');
-            
-            // Check if the mobile number is valid (10 digits)
-            // The regular expression ^[0-9]{10}$ means:
-            // ^ - start of string
-            // [0-9] - any digit from 0 to 9
-            // {10} - exactly 10 times
-            // $ - end of string
-            if (!/^[0-9]{10}$/.test(mobileNumber)) {
-                // Show error message
-                mobileError.classList.remove('hidden');
-                // Add error styling
-                mobileInput.classList.add('input-error');
-                // Stop further execution
-                return;
-            }
-            
-            // Store the mobile number for later use
-            userMobileNumber = mobileNumber;
-            
-            // Generate a random 6-digit OTP
-            // Math.random() gives a number between 0 and 1
-            // Multiply by 900000 to get a number between 0 and 899999
-            // Add 100000 to get a number between 100000 and 999999
-            // Convert to string so we can display it
-            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            // Display the OTP in the modal
-            otpDisplay.textContent = generatedOtp;
-            
-            // Show the OTP modal
-            otpModal.style.display = 'flex';
-            
-            // Hide the phone form and show the OTP form
-            phoneFormSection.classList.add('hidden');
-            otpFormSection.classList.remove('hidden');
-        });
-        
-        
-        // --------- STEP 7: CLOSE THE OTP MODAL ---------
-        
-        // When the close button on the OTP modal is clicked
-        closeOtpModalButton.addEventListener('click', function() {
-            // Hide the modal
-            otpModal.style.display = 'none';
-        });
-        
-        
-        // --------- STEP 8: OTP VERIFICATION FORM SUBMISSION ---------
-        
-        // When the OTP verification form is submitted
-        verifyOtpForm.addEventListener('submit', function(event) {
-            // Prevent the form from actually submitting
-            event.preventDefault();
-            
-            // Get the entered OTP and remove any extra spaces
-            var enteredOtp = otpInput.value.trim();
-            
-            // Hide any previous error message
-            otpError.classList.add('hidden');
-            
-            // Remove any previous error styling
-            otpInput.classList.remove('input-error');
-            
-            // Check if the entered OTP matches the generated OTP
-            if (enteredOtp !== generatedOtp) {
-                // Show error message
-                otpError.textContent = 'Invalid OTP. Please try again.';
-                otpError.classList.remove('hidden');
-                
-                // Add error styling
-                otpInput.classList.add('input-error');
-                
-                // Stop further execution
-                return;
-            }
-            
-            // If OTP is correct, hide the OTP form and show success message
-            otpFormSection.classList.add('hidden');
-            successMessageSection.classList.remove('hidden');
-            
-            // Wait 2 seconds (2000 milliseconds) then redirect to the plans page
-            setTimeout(function() {
-                // Store the user's mobile number in the browser's local storage
-                // This way other pages can access it
-                localStorage.setItem("userMobile", userMobileNumber);
-                
-                // Redirect to the plans page
-                window.location.href = "plan1.html";
-            }, 2000);
-        });
-        
-        
-        // --------- STEP 9: RESEND OTP FUNCTIONALITY ---------
-        
-        // When the resend OTP button is clicked
-        resendOtpButton.addEventListener('click', function() {
-            // Generate a new random 6-digit OTP
-            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            // Display the new OTP in the modal
-            otpDisplay.textContent = generatedOtp;
-            
-            // Show the OTP modal
-            otpModal.style.display = 'flex';
-            
-            // Save the original button text
-            var originalButtonText = resendOtpButton.textContent;
-            
-            // Change button text to show the OTP was sent
-            resendOtpButton.textContent = 'OTP sent!';
-            
-            // Disable the button temporarily to prevent spam clicks
-            resendOtpButton.disabled = true;
-            
-            // Wait 3 seconds (3000 milliseconds) then restore the button
-            setTimeout(function() {
-                // Restore original button text
-                resendOtpButton.textContent = originalButtonText;
-                
-                // Enable the button again
-                resendOtpButton.disabled = false;
-            }, 3000);
-        });
+        }
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            otpInputs[index - 1].focus();
+        }
+    });
+});
+
+otpVerifyForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const enteredOTP = Array.from(otpInputs).map(input => input.value).join('');
+    
+    if (enteredOTP === currentOTP) {
+        clearInterval(timerInterval);
+        clearInterval(resendTimerInterval);
+        showSuccessAndRedirect();
+    } else {
+        otpError.classList.remove('hidden');
+    }
+});
+
+backButton.addEventListener('click', () => {
+    otpForm.classList.add('hidden');
+    phoneForm.classList.remove('hidden');
+    clearInterval(timerInterval);
+    clearInterval(resendTimerInterval);
+});
+
+resendButton.addEventListener('click', () => {
+    currentOTP = generateOTP();
+    otpDisplay.textContent = currentOTP;
+    otpModal.style.display = 'block';
+    startTimer();
+    otpInputs.forEach(input => input.value = '');
+    otpError.classList.add('hidden');
+});
+
+closeModal.addEventListener('click', () => {
+    otpModal.style.display = 'none';
+});
+
+otpModal.addEventListener('click', (e) => {
+    if (e.target === otpModal) {
+        otpModal.style.display = 'none';
+    }
+});
     </script>
 </body>
 </html>

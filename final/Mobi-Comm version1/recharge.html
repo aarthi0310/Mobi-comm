@@ -274,108 +274,106 @@
     <!-- Scripts -->
     <script>
         // Account Dropdown Functionality
-        document.getElementById('accountDropdownButton').addEventListener('click', function() {
-            document.getElementById('dropdownMenu').classList.toggle('show');
-        });
+document.getElementById('accountDropdownButton').addEventListener('click', function() {
+    document.getElementById('dropdownMenu').classList.toggle('show');
+});
 
-        // Close dropdown when clicking outside
-        window.addEventListener('click', function(event) {
-            if (!event.target.matches('#accountDropdownButton') && !event.target.closest('#accountDropdown')) {
-                document.getElementById('dropdownMenu').classList.remove('show');
-            }
-        });
+// Close dropdown when clicking outside
+window.addEventListener('click', function(event) {
+    if (!event.target.matches('#accountDropdownButton') && !event.target.closest('#accountDropdown')) {
+        document.getElementById('dropdownMenu').classList.remove('show');
+    }
+});
 
-        // Form Validation
-        const rechargeForm = document.getElementById('rechargeForm');
-        const phoneInput = document.getElementById('phoneNumber');
-        const phoneError = document.getElementById('phoneError');
+// Form Validation
+const rechargeForm = document.getElementById('rechargeForm');
+const phoneInput = document.getElementById('phoneNumber');
+const phoneError = document.getElementById('phoneError');
+
+rechargeForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const phoneNumber = phoneInput.value;
+    if (!/^\d{10}$/.test(phoneNumber)) {
+        phoneInput.classList.add('invalid');
+        phoneError.classList.add('show');
+    } else {
+        phoneInput.classList.remove('invalid');
+        phoneError.classList.remove('show');
         
-        rechargeForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const phoneNumber = phoneInput.value;
-            if (!/^\d{10}$/.test(phoneNumber)) {
-                phoneInput.classList.add('invalid');
-                phoneError.classList.add('show');
-            } else {
-                phoneInput.classList.remove('invalid');
-                phoneError.classList.remove('show');
-                
-                // Get the selected plan details
-                const urlParams = new URLSearchParams(window.location.search);
-                const planName = urlParams.get('planName');
-                const price = urlParams.get('price');
-                const data = urlParams.get('data');
-                const validity = urlParams.get('validity');
-                
-                // Create URL with both plan and phone number parameters
-                let paymentUrl = 'payment.html?phone=' + encodeURIComponent(phoneNumber);
-                
-                if (planName) {
-                    paymentUrl += '&planName=' + encodeURIComponent(planName) +
-                                 '&price=' + encodeURIComponent(price) +
-                                 '&data=' + encodeURIComponent(data) +
-                                 '&validity=' + encodeURIComponent(validity);
-                }
-                
-                window.location.href = paymentUrl;
-            }
-        });
+        // Get the selected plan details
+        const urlParams = new URLSearchParams(window.location.search);
+        const planName = urlParams.get('planName');
         
-        // Handle selected plan display
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const planName = urlParams.get('planName');
+        if (planName) {
+            // If plan is selected, proceed to payment with all parameters
             const price = urlParams.get('price');
             const data = urlParams.get('data');
             const validity = urlParams.get('validity');
             
-            if (planName && price && data && validity) {
-                // Show selected plan container
-                document.getElementById('selectedPlanContainer').classList.remove('hidden');
-                
-                // Fill in the selected plan details
-                document.getElementById('selectedPlanName').textContent = planName;
-                document.getElementById('selectedPlanPrice').textContent = '₹' + price;
-                document.getElementById('selectedPlanData').textContent = data;
-                document.getElementById('selectedPlanValidity').textContent = validity;
-            }
+            let paymentUrl = 'payment.html?phone=' + encodeURIComponent(phoneNumber) +
+                            '&planName=' + encodeURIComponent(planName) +
+                            '&price=' + encodeURIComponent(price) +
+                            '&data=' + encodeURIComponent(data) +
+                            '&validity=' + encodeURIComponent(validity);
             
-            // Handle change plan button
-            document.getElementById('changePlanBtn').addEventListener('click', () => {
-                window.location.href = 'plan1.html';
-            });
-        });
-        
-        // Simple carousel implementation
-        const carousel = document.querySelector('.carousel');
-        const container = document.querySelector('.carousel-container');
-        const slides = document.querySelectorAll('.carousel-slide');
-        const prevBtn = document.querySelector('.carousel-prev');
-        const nextBtn = document.querySelector('.carousel-next');
-        
-        let currentIndex = 0;
-        const slideCount = slides.length;
-        
-        function updateCarousel() {
-            const slideWidth = carousel.clientWidth;
-            container.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+            window.location.href = paymentUrl;
+        } else {
+            // If no plan selected, redirect to plan selection page with phone parameter
+            window.location.href = 'plan1.html?phone=' + encodeURIComponent(phoneNumber);
         }
+    }
+});
+
+// Handle selected plan display
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const planName = urlParams.get('planName');
+    const price = urlParams.get('price');
+    const data = urlParams.get('data');
+    const validity = urlParams.get('validity');
+    
+    if (planName && price && data && validity) {
+        // Show selected plan container
+        document.getElementById('selectedPlanContainer').classList.remove('hidden');
         
-        window.addEventListener('resize', updateCarousel);
-        
-        prevBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + slideCount) % slideCount;
-            updateCarousel();
-        });
-        
-        nextBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % slideCount;
-            updateCarousel();
-        });
-        
-        // Initialize carousel
-        updateCarousel();
+        // Fill in the selected plan details
+        document.getElementById('selectedPlanName').textContent = planName;
+        document.getElementById('selectedPlanPrice').textContent = '₹' + price;
+        document.getElementById('selectedPlanData').textContent = data;
+        document.getElementById('selectedPlanValidity').textContent = validity;
+    }
+});
+
+// Simple carousel implementation
+const carousel = document.querySelector('.carousel');
+const container = document.querySelector('.carousel-container');
+const slides = document.querySelectorAll('.carousel-slide');
+const prevBtn = document.querySelector('.carousel-prev');
+const nextBtn = document.querySelector('.carousel-next');
+
+let currentIndex = 0;
+const slideCount = slides.length;
+
+function updateCarousel() {
+    const slideWidth = carousel.clientWidth;
+    container.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+}
+
+window.addEventListener('resize', updateCarousel);
+
+prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+    updateCarousel();
+});
+
+nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % slideCount;
+    updateCarousel();
+});
+
+// Initialize carousel
+updateCarousel();
     </script>
 </body>
 </html>

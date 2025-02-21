@@ -143,31 +143,31 @@
             }
         });
 
-        // Function to update payment confirmation details
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get payment information from sessionStorage
-            const paymentInfoJSON = sessionStorage.getItem('paymentInfo');
-            
-            if (paymentInfoJSON) {
-                const paymentInfo = JSON.parse(paymentInfoJSON);
-                
-                // Update the confirmation details with the payment information
-                document.getElementById('confirmPlanName').textContent = paymentInfo.planName || 'N/A';
-                document.getElementById('confirmAmount').textContent = paymentInfo.amount || 'N/A';
-                document.getElementById('confirmPaymentMethod').textContent = paymentInfo.paymentMethod || 'N/A';
-                document.getElementById('confirmTransactionId').textContent = paymentInfo.transactionId || 'N/A';
-                document.getElementById('confirmDateTime').textContent = paymentInfo.dateTime || getCurrentDateTime();
-            } else {
-                // If no payment info in session storage, use current date/time
-                document.getElementById('confirmDateTime').textContent = getCurrentDateTime();
-                
-                // Set default values or placeholders for other fields
-                document.getElementById('confirmPlanName').textContent = 'Plan information not available';
-                document.getElementById('confirmAmount').textContent = 'Amount information not available';
-                document.getElementById('confirmPaymentMethod').textContent = 'Payment method not available';
-                document.getElementById('confirmTransactionId').textContent = 'Transaction ID not available';
-            }
-        });
+       // Function to update payment confirmation details
+document.addEventListener('DOMContentLoaded', function() {
+    // Get payment information from sessionStorage
+    const paymentInfoJSON = sessionStorage.getItem('paymentInfo');
+    
+    if (paymentInfoJSON) {
+        const paymentInfo = JSON.parse(paymentInfoJSON);
+        
+        // Update the confirmation details with the payment information
+        document.getElementById('confirmPlanName').textContent = paymentInfo.planName || 'N/A';
+        document.getElementById('confirmAmount').textContent = paymentInfo.amount || 'N/A';
+        document.getElementById('confirmPaymentMethod').textContent = paymentInfo.method || 'N/A'; // Fixed: use 'method' instead of 'paymentMethod'
+        document.getElementById('confirmTransactionId').textContent = paymentInfo.transactionId || 'N/A';
+        document.getElementById('confirmDateTime').textContent = paymentInfo.date || getCurrentDateTime(); // Fixed: use 'date' instead of 'dateTime'
+    } else {
+        // If no payment info in session storage, use current date/time
+        document.getElementById('confirmDateTime').textContent = getCurrentDateTime();
+        
+        // Set default values or placeholders for other fields
+        document.getElementById('confirmPlanName').textContent = 'Plan information not available';
+        document.getElementById('confirmAmount').textContent = 'Amount information not available';
+        document.getElementById('confirmPaymentMethod').textContent = 'Payment method not available';
+        document.getElementById('confirmTransactionId').textContent = 'Transaction ID not available';
+    }
+});
 
         // Function to get current date and time in a readable format
         function getCurrentDateTime() {

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -211,41 +212,43 @@
         }
 
         // Mobile number validation
-        const mobileNumberInput = document.getElementById('mobileNumber');
-        const errorMessage = document.getElementById('errorMessage');
-        let validationTimeout;
+        // Modified mobile number validation code for index.html
+const mobileNumberInput = document.getElementById('mobileNumber');
+const errorMessage = document.getElementById('errorMessage');
+let validationTimeout;
 
-        mobileNumberInput.addEventListener('input', function() {
-            clearTimeout(validationTimeout);
-            
-            validationTimeout = setTimeout(() => {
-                const mobileNumber = this.value.trim();
-                const phonePattern = /^[0-9]{10}$/;
+mobileNumberInput.addEventListener('input', function() {
+    clearTimeout(validationTimeout);
+    
+    validationTimeout = setTimeout(() => {
+        const mobileNumber = this.value.trim();
+        const phonePattern = /^[0-9]{10}$/;
 
-                if (mobileNumber.length > 0) {
-                    if (phonePattern.test(mobileNumber)) {
-                        // Valid number
-                        errorMessage.classList.add('hidden');
-                        mobileNumberInput.classList.remove('ring-2', 'ring-red-400');
-                        mobileNumberInput.classList.add('ring-2', 'ring-green-400');
-                        
-                        // Wait a moment before redirecting
-                        setTimeout(() => {
-                            window.location.href = 'plan1.html';
-                        }, 500);
-                    } else {
-                        // Invalid number
-                        errorMessage.classList.remove('hidden');
-                        mobileNumberInput.classList.remove('ring-2', 'ring-green-400');
-                        mobileNumberInput.classList.add('ring-2', 'ring-red-400');
-                    }
-                } else {
-                    // Empty input
-                    errorMessage.classList.add('hidden');
-                    mobileNumberInput.classList.remove('ring-2', 'ring-red-400', 'ring-green-400');
-                }
-            }, 300); // Small delay for better user experience
-        });
+        if (mobileNumber.length > 0) {
+            if (phonePattern.test(mobileNumber)) {
+                // Valid number
+                errorMessage.classList.add('hidden');
+                mobileNumberInput.classList.remove('ring-2', 'ring-red-400');
+                mobileNumberInput.classList.add('ring-2', 'ring-green-400');
+                
+                // Wait a moment before redirecting
+                setTimeout(() => {
+                    // Pass the phone number to plan1.html
+                    window.location.href = `plan1.html?phone=${encodeURIComponent(mobileNumber)}`;
+                }, 500);
+            } else {
+                // Invalid number
+                errorMessage.classList.remove('hidden');
+                mobileNumberInput.classList.remove('ring-2', 'ring-green-400');
+                mobileNumberInput.classList.add('ring-2', 'ring-red-400');
+            }
+        } else {
+            // Empty input
+            errorMessage.classList.add('hidden');
+            mobileNumberInput.classList.remove('ring-2', 'ring-red-400', 'ring-green-400');
+        }
+    }, 300); // Small delay for better user experience
+});
 
         // Prevent form submission on enter key
         mobileNumberInput.addEventListener('keypress', function(event) {

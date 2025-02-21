@@ -66,11 +66,8 @@
                 <i class="fas fa-users w-6"></i>
                 <span>Customer Details</span>
             </a>
-            <a href="#recharges" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
-                <i class="fas fa-history w-6"></i>
-                <span>Recharge History</span>
-            </a>
-            <a href="#notifications" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+            
+            <a href="admindashboard.html#notifications" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
                 <i class="fas fa-bell w-6"></i>
                 <span>Notifications</span>
                 <span class="notification-badge ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
@@ -307,14 +304,16 @@ function viewCustomerDetails(id) {
         document.getElementById('modalName').textContent = customer.name;
         document.getElementById('modalPhone').textContent = customer.phone;
         document.getElementById('modalEmail').textContent = customer.email;
-        document.getElementById('modalAddress').textContent = customer.address;
-        document.getElementById('modalJoinDate').textContent = formatDate(customer.joinDate);
         document.getElementById('modalPlan').textContent = customer.currentPlan;
         document.getElementById('modalActivation').textContent = formatDate(customer.activationDate);
         document.getElementById('modalExpiry').textContent = formatDate(customer.expiryDate);
-        document.getElementById('modalDataUsage').textContent = customer.dataUsage;
-        document.getElementById('modalPrevPlans').textContent = customer.previousPlans;
-        
+
+        // Hide unused sections
+        document.getElementById('modalAddress').parentElement.style.display = 'none'; // Hide Address
+        document.getElementById('modalJoinDate').parentElement.style.display = 'none'; // Hide Customer Since
+        document.getElementById('modalDataUsage').parentElement.style.display = 'none'; // Hide Data Used
+        document.getElementById('modalPrevPlans').parentElement.style.display = 'none'; // Hide Previous Plans
+
         // Load transaction history into the modal
         const transactionsBody = document.getElementById('modalTransactions');
         transactionsBody.innerHTML = '';
@@ -333,7 +332,7 @@ function viewCustomerDetails(id) {
             `;
             transactionsBody.appendChild(row);
         });
-        
+
         // Show the modal popup
         document.getElementById('customerModal').style.display = 'block';
     }

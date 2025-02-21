@@ -59,8 +59,10 @@
     <nav class="bg-white shadow-lg fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
             <div class="flex items-center">
-                <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2">
-                <span class="text-xl font-bold text-blue-600">Mobi-Comm</span>
+                <a href="index.html">
+                <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2"></a>
+                <a href="index.html">
+                <span class="text-xl font-bold text-blue-600">Mobi-Comm</span></a>
             </div>
             <div class="flex items-center space-x-8">
                 <a href="index.html" class="text-gray-600 hover:text-blue-600 transition">Home</a>
@@ -257,11 +259,20 @@
     </div>
 
     <script>
-        // Function to handle the selection of a plan
         function selectPlan(planName, price, data, validity) {
-            const url = `recharge.html?planName=${encodeURIComponent(planName)}&price=${encodeURIComponent(price)}&data=${encodeURIComponent(data)}&validity=${encodeURIComponent(validity)}`;
-            window.location.href = url;
-        }
+    // Check if there's a phone parameter in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const phoneNumber = urlParams.get('phone');
+    
+    let url = `recharge.html?planName=${encodeURIComponent(planName)}&price=${encodeURIComponent(price)}&data=${encodeURIComponent(data)}&validity=${encodeURIComponent(validity)}`;
+    
+    // If phone number exists, pass it directly to payment page
+    if (phoneNumber) {
+        url = `payment.html?phone=${encodeURIComponent(phoneNumber)}&planName=${encodeURIComponent(planName)}&price=${encodeURIComponent(price)}&data=${encodeURIComponent(data)}&validity=${encodeURIComponent(validity)}`;
+    }
+    
+    window.location.href = url;
+}
 
         // JavaScript for filtering the plans
         const filterButtons = document.querySelectorAll('.filter-button');
