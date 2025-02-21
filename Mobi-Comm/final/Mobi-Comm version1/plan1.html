@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobi-Comm | Mobile Plans & Packages</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #1a365d 0%, #2563eb 100%);
+        }
+        .selected-plan {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+            background-color: #f0f9ff;
+        }
+        .plan-row:hover {
+            background-color: #f0f7ff;
+        }
+        .filter-button.active {
+            background-color: #2563eb;
+            color: white;
+        }
+        .filter-button {
+            background-color: #ffffff;
+            color: #1a365d;
+        }
+        .filter-button:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+        .hidden {
+            display: none;
+        }
+        .badge-popular {
+            background-color: #ef4444;
+            color: white;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            z-index: 50;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2">
+                <span class="text-xl font-bold text-blue-600">Mobi-Comm</span>
+            </div>
+            <div class="flex items-center space-x-8">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600 transition">Home</a>
+                <a href="plan1.html" class="text-gray-600 hover:text-blue-600 transition">Plans</a>
+                <a href="recharge.html" class="text-gray-600 hover:text-blue-600 transition">Recharge</a>
+                <a href="support.html" class="text-gray-600 hover:text-blue-600 transition">Support</a>
+                <div class="relative" id="accountDropdown">
+                    <button class="flex items-center text-gray-600 hover:text-blue-600 transition focus:outline-none" id="accountDropdownButton">
+                        Account
+                        <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="profile.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-150">Profile</a>
+                        <a href="login.html" class="block px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-150">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-gradient pt-28 pb-12 text-center text-white">
+        <h1 class="text-4xl font-bold mb-2">Find Your Perfect Plan</h1>
+        <p class="text-lg opacity-90 max-w-2xl mx-auto px-4">
+            Plans That Fit Your Lifestyle and Budget – Choose What's Best for You!
+        </p>
+    </div>
+
+     <!-- Filter Section -->
+     <div class="max-w-6xl mx-auto px-4 -mt-6">
+        <div class="bg-white rounded-lg shadow-lg p-4 flex flex-wrap justify-center gap-2">
+            <button class="filter-button active px-4 py-2 rounded-md text-sm font-medium transition" data-filter="all">All Plans</button>
+            <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="popular">
+                <i class="fas fa-fire mr-1"></i> Popular Plans
+            </button>
+            <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="validity">
+                <i class="fas fa-calendar-alt mr-1"></i> Validity Plans
+            </button>
+            <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="data">
+                <i class="fas fa-database mr-1"></i> Data Plans
+            </button>
+            <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="unlimited">
+                <i class="fas fa-infinity mr-1"></i> Unlimited Data
+            </button>
+        </div>
+    </div>
+
+    <!-- Plans Table Section -->
+    <div class="content max-w-6xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="bg-blue-50 text-blue-800">
+                            <th class="py-3 px-4 text-left font-medium">Plan Details</th>
+                            <th class="py-3 px-4 text-center font-medium">Price</th>
+                            <th class="py-3 px-4 text-center font-medium">Data</th>
+                            <th class="py-3 px-4 text-center font-medium">Validity</th>
+                            <th class="py-3 px-4 text-center font-medium">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Popular Plan 1 -->
+                        <tr class="plan-row border-b plan-popular plan-data">
+                            <td class="py-4 px-4">
+                                <div class="flex items-center">
+                                    <h3 class="font-medium text-gray-800">Monthly Value Pack</h3>
+                                    <span class="ml-2 text-xs px-2 py-1 badge-popular rounded-full">Popular</span>
+                                </div>
+                                <p class="text-sm text-gray-600">Unlimited calls, 100 SMS/day</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Monthly</span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-center font-bold text-blue-700">₹199</td>
+                            <td class="py-4 px-4 text-center">1.5GB/day</td>
+                            <td class="py-4 px-4 text-center">28 days</td>
+                            <td class="py-4 px-4 text-center">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg text-sm transition"
+                                    onclick="selectPlan('Monthly Value Pack', 199, '1.5GB/day', '28 days')">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Popular Plan 2 -->
+                        <tr class="plan-row border-b plan-popular plan-unlimited">
+                            <td class="py-4 px-4">
+                                <div class="flex items-center">
+                                    <h3 class="font-medium text-gray-800">5G Unlimited Plan</h3>
+                                    <span class="ml-2 text-xs px-2 py-1 badge-popular rounded-full">Popular</span>
+                                </div>
+                                <p class="text-sm text-gray-600">Unlimited calls, 100 SMS/day</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">5G Exclusive</span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-center font-bold text-blue-700">₹999</td>
+                            <td class="py-4 px-4 text-center">Unlimited Data</td>
+                            <td class="py-4 px-4 text-center">30 days</td>
+                            <td class="py-4 px-4 text-center">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg text-sm transition"
+                                    onclick="selectPlan('5G Unlimited Plan', 999, 'Unlimited Data', '30 days')">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Validity Plan 1 -->
+                        <tr class="plan-row border-b plan-validity">
+                            <td class="py-4 px-4">
+                                <h3 class="font-medium text-gray-800">Long Validity Plan</h3>
+                                <p class="text-sm text-gray-600">Unlimited calls, 100 SMS/day</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">Annual</span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-center font-bold text-blue-700">₹1499</td>
+                            <td class="py-4 px-4 text-center">2GB/day</td>
+                            <td class="py-4 px-4 text-center">365 days</td>
+                            <td class="py-4 px-4 text-center">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg text-sm transition"
+                                    onclick="selectPlan('Long Validity Plan', 1499, '2GB/day', '365 days')">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Validity Plan 2 -->
+                        <tr class="plan-row border-b plan-validity">
+                            <td class="py-4 px-4">
+                                <h3 class="font-medium text-gray-800">Basic Validity Extension</h3>
+                                <p class="text-sm text-gray-600">Limited services, 10 SMS/day</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">Low Cost</span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-center font-bold text-blue-700">₹99</td>
+                            <td class="py-4 px-4 text-center">100MB total</td>
+                            <td class="py-4 px-4 text-center">90 days</td>
+                            <td class="py-4 px-4 text-center">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg text-sm transition"
+                                    onclick="selectPlan('Basic Validity Extension', 99, '100MB total', '90 days')">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Data Plan 1 -->
+                        <tr class="plan-row border-b plan-data">
+                            <td class="py-4 px-4">
+                                <h3 class="font-medium text-gray-800">Premium Data Pack</h3>
+                                <p class="text-sm text-gray-600">Data only plan, no calls</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Data</span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-center font-bold text-blue-700">₹251</td>
+                            <td class="py-4 px-4 text-center">50GB total</td>
+                            <td class="py-4 px-4 text-center">28 days</td>
+                            <td class="py-4 px-4 text-center">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg text-sm transition"
+                                    onclick="selectPlan('Premium Data Pack', 251, '50GB total', '28 days')">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Data Plan 2 -->
+                        <tr class="plan-row border-b plan-data">
+                            <td class="py-4 px-4">
+                                <h3 class="font-medium text-gray-800">Daily Data Booster</h3>
+                                <p class="text-sm text-gray-600">Add-on to existing plans</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Daily</span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-center font-bold text-blue-700">₹25</td>
+                            <td class="py-4 px-4 text-center">1GB/day</td>
+                            <td class="py-4 px-4 text-center">1 day</td>
+                            <td class="py-4 px-4 text-center">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-lg text-sm transition"
+                                    onclick="selectPlan('Daily Data Booster', 25, '1GB/day', '1 day')">
+                                    Select
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to handle the selection of a plan
+        function selectPlan(planName, price, data, validity) {
+            const url = `recharge.html?planName=${encodeURIComponent(planName)}&price=${encodeURIComponent(price)}&data=${encodeURIComponent(data)}&validity=${encodeURIComponent(validity)}`;
+            window.location.href = url;
+        }
+
+        // JavaScript for filtering the plans
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const plans = document.querySelectorAll('.plan-row');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const filter = button.getAttribute('data-filter');
+                
+                // Toggle active class on buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                plans.forEach(plan => {
+                    if (filter === 'all' || plan.classList.contains(`plan-${filter}`)) {
+                        plan.classList.remove('hidden');
+                    } else {
+                        plan.classList.add('hidden');
+                    }
+                });
+            });
+        });
+        // Get the dropdown button and menu
+           const accountDropdownButton = document.getElementById("accountDropdownButton");
+           const dropdownMenu = document.getElementById("dropdownMenu");
+ 
+           // Toggle dropdown visibility on button click
+        accountDropdownButton.addEventListener("click", function (event) {
+     event.stopPropagation(); // Prevent the click from reaching the document
+          dropdownMenu.classList.toggle("show");
+});
+
+        // Close dropdown when clicking outside
+           document.addEventListener("click", function (event) {
+           if (!accountDropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+         dropdownMenu.classList.remove("show");
+    }
+});
+
+    </script>
+
+</body>
+</html>
