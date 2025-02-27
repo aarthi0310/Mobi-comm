@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobi-Comm Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+       /* Sidebar Navigation */
+.sidebar-nav:hover { 
+    background-color: #1e40af; 
+    border-radius: 0.5rem; 
+}
+
+/* Card Zoom Effect */
+.card-zoom:hover { 
+    transform: scale(1.02); 
+    transition: transform 0.2s ease-in-out; 
+}
+
+/* Notification Badge Animation */
+.notification-badge { 
+    animation: pulse 2s infinite; 
+}
+
+@keyframes pulse { 
+    0%, 100% { transform: scale(1); } 
+    50% { transform: scale(1.1); } 
+}
+
+/* Modal Styling */
+.modal { 
+    display: none; 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 100; 
+    overflow-y: auto; 
+}
+
+.modal-content { 
+    background-color: white; 
+    margin: 5% auto; 
+    padding: 20px; 
+    border-radius: 8px; 
+    width: 80%; 
+    max-width: 500px; 
+    position: relative; 
+}
+
+/* Filter Button Active State */
+.filter-button.active { 
+    background-color: #3b82f6; 
+    color: white; 
+}
+
+/* Dark Mode */
+.dark-mode { 
+    background-color: #1f2937; 
+    color: #f3f4f6; 
+}
+
+.dark-mode .bg-white { background-color: #374151; }
+.dark-mode .text-gray-800 { color: #f3f4f6; }
+.dark-mode .bg-gray-50 { background-color: #4b5563; }
+.dark-mode .text-gray-600 { color: #d1d5db; }
+.dark-mode .shadow-md { 
+    box-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.1); 
+}
+
+/* Toggle Switch */
+.toggle-label { 
+    position: relative; 
+    display: inline-block; 
+    width: 40px; 
+    height: 20px; 
+}
+
+.toggle-label input { 
+    opacity: 0; 
+    width: 0; 
+    height: 0; 
+}
+
+.slider { 
+    position: absolute; 
+    cursor: pointer; 
+    top: 0; left: 0; right: 0; bottom: 0; 
+    background-color: #ccc; 
+    transition: 0.4s; 
+    border-radius: 20px; 
+}
+
+.slider:before { 
+    position: absolute; 
+    content: ""; 
+    height: 16px; width: 16px; 
+    left: 2px; bottom: 2px; 
+    background-color: white; 
+    transition: 0.4s; 
+    border-radius: 50%; 
+}
+
+input:checked + .slider { 
+    background-color: #10b981; 
+}
+
+input:checked + .slider:before { 
+    transform: translateX(20px); 
+}
+
+/* Chart Container */
+#chartContainer { 
+    background-color: #fff; 
+    border-radius: 8px; 
+    padding: 20px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 20px; 
+    width: 80%; 
+    max-width: 700px; 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+/* Toggle switch styling for the table */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 20px;
+}
+
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .switch-slider {
+  background-color: #10b981;
+}
+
+input:checked + .switch-slider:before {
+  transform: translateX(16px);
+}
+
+/* Action button styling */
+.action-btn {
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+}
+
+.edit-btn {
+  color: #3b82f6;
+}
+
+.edit-btn:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.delete-btn {
+  color: #ef4444;
+}
+
+.delete-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 w-64 h-full bg-blue-800 p-4 z-50">
+        <div class="flex items-center mb-8 mt-2">
+            <img src="logo.webp" alt="Mobi-Comm Logo" class="h-8 w-8 mr-2">
+            <span class="text-xl font-bold text-white">Admin Panel</span>
+        </div>
+        <nav class="space-y-4">
+            <a href="#chartContainer" id="dashboard" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-tachometer-alt w-6"></i><span>Dashboard</span>
+            </a>
+            <a href="#plans" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-list w-6"></i><span>Plans Management</span>
+            </a>
+            <a href="customer.html" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-users w-6"></i><span>Customer Details</span>
+            </a>
+            <a href="#transactions" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-money-bill-wave w-6"></i><span>Transaction History</span>
+            </a>
+            <a href="#notifications" class="sidebar-nav flex items-center text-white p-2 rounded transition-colors">
+                <i class="fas fa-bell w-6"></i><span>Expiring Plans Alert</span>
+                <span class="notification-badge ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8" id="dashboard">
+            <h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
+            <div class="flex items-center space-x-4">
+                <span class="mr-4 text-gray-600">Welcome, Admin</span>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i> <a href="index.html">Logout</a>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6 card-zoom">
+                <div class="flex items-center justify-between">
+                    <div><p class="text-gray-600">Total Customers</p><h3 class="text-2xl font-bold text-gray-800">5,842</h3></div>
+                    <div class="bg-blue-100 p-3 rounded-full"><i class="fas fa-users text-blue-600 text-xl"></i></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 card-zoom">
+                <div class="flex items-center justify-between">
+                    <div><p class="text-gray-600">Active Plans</p><h3 class="text-2xl font-bold text-gray-800">3,789</h3></div>
+                    <div class="bg-green-100 p-3 rounded-full"><i class="fas fa-chart-line text-green-600 text-xl"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphical Analysis of Plans -->
+        <div id="chartContainer"><canvas id="plansChart"></canvas></div>
+
+        <!-- Expiring Plans Notifications -->
+        <div id="notifications" class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Expiring Plans Alert</h2>
+            <div class="space-y-4" id="expiringPlansAlert"></div>
+        </div>
+
+        <!-- Plan Filters and Search -->
+        <div class="max-w-6xl mx-auto px-4 -mt-6 mb-8">
+            <div class="bg-white rounded-lg shadow-lg p-4 flex flex-wrap justify-between items-center gap-2">
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button class="filter-button active px-4 py-2 rounded-md text-sm font-medium transition" data-filter="all">All Plans</button>
+                    <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="popular"><i class="fas fa-fire mr-1"></i> Popular Plans</button>
+                    <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="validity"><i class="fas fa-calendar-alt mr-1"></i> Validity Plans</button>
+                    <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="data"><i class="fas fa-database mr-1"></i> Data Plans</button>
+                    <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="unlimited"><i class="fas fa-infinity mr-1"></i> Unlimited Data</button>
+                    <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="entertainment"><i class="fas fa-tv mr-1"></i> Entertainment</button>
+                    <button class="filter-button px-4 py-2 rounded-md text-sm font-medium bg-gray-100 hover:bg-gray-200 transition" data-filter="international"><i class="fas fa-globe mr-1"></i> International</button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="searchPlans" placeholder="Search plans..." class="p-2 border rounded-md">
+                    <button id="exportCsv" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"><i class="fas fa-download mr-2"></i> Export CSV</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plans Management Section -->
+        <div id="plans" class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Plans Management</h2>
+                <button onclick="openAddPlanModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    <i class="fas fa-plus mr-2"></i>Add New Plan
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Validity</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="plansTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Add/Edit Plan Modal -->
+        <div id="planModal" class="modal">
+            <div class="modal-content">
+                <h2 class="text-xl font-bold mb-4" id="modalTitle">Add New Plan</h2>
+                <form id="planForm">
+                    <input type="hidden" id="planId">
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Plan Name</label><input type="text" id="planName" class="w-full p-2 border rounded" required></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Price (₹)</label><input type="number" id="planPrice" class="w-full p-2 border rounded" required></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Data</label><input type="text" id="planData" class="w-full p-2 border rounded" required></div>
+                    <div class="mb-4"><label class="block text-gray-700 text-sm font-bold mb-2">Validity (days)</label><input type="number" id="planValidity" class="w-full p-2 border rounded" required></div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Category</label>
+                        <select id="planCategory" class="w-full p-2 border rounded" required>
+                            <option value="popular">Popular</option>
+                            <option value="validity">Validity</option>
+                            <option value="data">Data</option>
+                            <option value="unlimited">Unlimited</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="international">International</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" onclick="closePlanModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Plan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <h2 class="text-xl font-bold mb-4 text-red-600">Confirm Delete</h2>
+                <p class="mb-6">Are you sure you want to delete this plan? This action cannot be undone.</p>
+                <input type="hidden" id="deletePlanId">
+                <div class="flex justify-end">
+                    <button type="button" onclick="closeDeleteModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                    <button type="button" onclick="confirmDeletePlan()" class="bg-red-600 text-white px-4 py-2 rounded">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Load plans from localStorage or use default
+    let plans = JSON.parse(localStorage.getItem('mobi-comm-plans')) || [
+        { id: 1, name: "Monthly Value Pack", price: 199, data: "1.5GB/day", validity: "28", category: "popular", active: true },
+        { id: 2, name: "5G Unlimited Plan", price: 999, data: "Unlimited Data", validity: "30", category: "unlimited", active: true },
+        { id: 3, name: "Long Validity Plan", price: 1499, data: "2GB/day", validity: "365", category: "validity", active: true },
+        { id: 4, name: "Basic Validity Extension", price: 99, data: "100MB total", validity: "90", category: "validity", active: true },
+        { id: 5, name: "Premium Data Pack", price: 251, data: "50GB total", validity: "28", category: "data", active: true },
+        { id: 6, name: "Daily Data Booster", price: 25, data: "1GB/day", validity: "1", category: "data", active: true },
+        { id: 7, name: "Entertainment Plus Pack", price: 599, data: "2GB/day", validity: "28", category: "entertainment", active: true }
+    ];
+
+    let currentFilter = "all";
+
+    // Function to save plans to localStorage
+    function savePlansToStorage() {
+        const visiblePlans = plans.filter(plan => plan.active);
+        localStorage.setItem('mobi-comm-plans', JSON.stringify(visiblePlans));
+    }
+
+    // Function to put plans in the table
+    function showPlans(searchText = "") {
+        const tableBody = document.getElementById("plansTableBody");
+        tableBody.innerHTML = "";
+        let plansToShow = currentFilter === "all" ? plans : plans.filter(plan => plan.category === currentFilter);
+        if (searchText) {
+            plansToShow = plansToShow.filter(plan => plan.name.toLowerCase().includes(searchText.toLowerCase()));
+        }
+        plansToShow.forEach(plan => {
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td class="px-6 py-4">${plan.name}</td>
+                <td class="px-6 py-4">₹${plan.price}</td>
+                <td class="px-6 py-4">${plan.data}</td>
+                <td class="px-6 py-4">${plan.validity} days</td>
+                <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs ${getColor(plan.category)}">${makePretty(plan.category)}</span></td>
+                <td class="px-6 py-4">
+                    <label class="switch">
+                        <input type="checkbox" ${plan.active ? "checked" : ""} onchange="turnOnOff(${plan.id}, this.checked)">
+                        <span class="switch-slider"></span>
+                    </label>
+                </td>
+                <td class="px-6 py-4 flex space-x-3">
+                    <button onclick="changePlan(${plan.id})" class="action-btn edit-btn" title="Edit Plan">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="askToDelete(${plan.id})" class="action-btn delete-btn" title="Delete Plan">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Function to turn a plan on or off
+    function turnOnOff(planId, isOn) {
+        for (let i = 0; i < plans.length; i++) {
+            if (plans[i].id === planId) {
+                plans[i].active = isOn;
+                showMessage("Plan turned " + (isOn ? "on" : "off") + "!", "success");
+                showPlans(document.getElementById("searchPlans").value);
+                updateChart();
+                savePlansToStorage();
+                break;
+            }
+        }
+    }
+
+    // Function to pick a color for each category
+    function getColor(category) {
+        if (category === "popular") return "bg-orange-100 text-orange-800";
+        if (category === "validity") return "bg-green-100 text-green-800";
+        if (category === "data") return "bg-blue-100 text-blue-800";
+        if (category === "unlimited") return "bg-purple-100 text-purple-800";
+        if (category === "entertainment") return "bg-pink-100 text-pink-800";
+        if (category === "international") return "bg-indigo-100 text-indigo-800";
+        return "bg-gray-100 text-gray-800";
+    }
+
+    // Function to capitalize first letter
+    function makePretty(text) {
+        return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    // Function to show expiring plans
+    function showExpiringPlans() {
+        const alertBox = document.getElementById("expiringPlansAlert");
+        const expiring = [
+            { name: "John Doe", plan: "Monthly Value Pack", expiryDate: "2025-02-22" },
+            { name: "Jane Smith", plan: "5G Unlimited Plan", expiryDate: "2025-02-21" }
+        ];
+        alertBox.innerHTML = "";
+        expiring.forEach(expiry => {
+            let div = document.createElement("div");
+            div.className = "flex items-center justify-between bg-yellow-50 p-4 rounded-lg";
+            div.innerHTML = `
+                <div><p class="font-semibold text-yellow-800">${expiry.name}'s ${expiry.plan}</p><p class="text-sm text-yellow-600">Expires on ${expiry.expiryDate}</p></div>
+                <button class="text-yellow-800">Dismiss</button>
+            `;
+            alertBox.appendChild(div);
+        });
+    }
+
+    // Filter button click handler
+    document.addEventListener("click", function(event) {
+        let button = event.target.closest(".filter-button");
+        if (button) {
+            let filter = button.getAttribute("data-filter");
+            document.querySelectorAll(".filter-button").forEach(btn => {
+                btn.classList.remove("active");
+                btn.classList.add("bg-gray-100");
+            });
+            button.classList.add("active");
+            button.classList.remove("bg-gray-100");
+            currentFilter = filter;
+            showPlans(document.getElementById("searchPlans").value);
+        }
+    });
+
+    // Search input handler
+    document.getElementById("searchPlans").addEventListener("input", function(event) {
+        showPlans(event.target.value);
+    });
+
+    // Open add/edit plan modal
+    function openAddPlanModal() {
+        document.getElementById("modalTitle").textContent = "Add New Plan";
+        document.getElementById("planForm").reset();
+        document.getElementById("planId").value = "";
+        document.getElementById("planModal").style.display = "block";
+    }
+
+    // Edit plan
+    function changePlan(id) {
+        for (let i = 0; i < plans.length; i++) {
+            if (plans[i].id === id) {
+                document.getElementById("modalTitle").textContent = "Edit Plan";
+                document.getElementById("planId").value = plans[i].id;
+                document.getElementById("planName").value = plans[i].name;
+                document.getElementById("planPrice").value = plans[i].price;
+                document.getElementById("planData").value = plans[i].data;
+                document.getElementById("planValidity").value = plans[i].validity;
+                document.getElementById("planCategory").value = plans[i].category;
+                document.getElementById("planModal").style.display = "block";
+                break;
+            }
+        }
+    }
+
+    // Close add/edit modal
+    function closePlanModal() {
+        document.getElementById("planModal").style.display = "none";
+    }
+
+    // Open delete confirmation modal
+    function askToDelete(id) {
+        document.getElementById("deletePlanId").value = id;
+        document.getElementById("deleteModal").style.display = "block";
+    }
+
+    // Close delete modal
+    function closeDeleteModal() {
+        document.getElementById("deleteModal").style.display = "none";
+    }
+
+    // Confirm delete plan
+    function confirmDeletePlan() {
+        let idToDelete = parseInt(document.getElementById("deletePlanId").value);
+        plans = plans.filter(plan => plan.id !== idToDelete);
+        closeDeleteModal();
+        showPlans();
+        showMessage("Plan deleted!", "success");
+        updateChart();
+        savePlansToStorage();
+    }
+
+    // Show message
+    function showMessage(message, type) {
+        let box = document.createElement("div");
+        box.className = "fixed top-4 right-4 p-4 rounded-md shadow-md";
+        if (type === "success") box.className += " bg-green-100 text-green-800";
+        box.textContent = message;
+        document.body.appendChild(box);
+        setTimeout(() => box.remove(), 3000);
+    }
+
+    // Update chart
+    let chartInstance = null;
+    function updateChart() {
+        const ctx = document.getElementById("plansChart").getContext("2d");
+        let categoryCounts = { popular: 0, validity: 0, data: 0, unlimited: 0, entertainment: 0, international: 0, student: 0, senior: 0, wfh: 0 };
+        plans.forEach(plan => { if (plan.active) categoryCounts[plan.category]++; });
+        if (chartInstance) chartInstance.destroy();
+        chartInstance = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["Popular", "Validity", "Data", "Unlimited", "Entertainment", ],
+                datasets: [{
+                    label: "Active Plans by Category",
+                    data: [categoryCounts.popular, categoryCounts.validity, categoryCounts.data, categoryCounts.unlimited, categoryCounts.entertainment, categoryCounts.international, categoryCounts.student, categoryCounts.senior, categoryCounts.wfh],
+                    backgroundColor: ["#ff4500", "#32cd32", "#1e90ff", "#9400d3", "#ff1493", "#00ced1", "#20b2aa", "#ffa500", "#808080"]
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true, title: { display: true, text: "Number of Active Plans" } }, x: { title: { display: true, text: "Plan Categories" } } },
+                plugins: { title: { display: true, text: "Plan Distribution Analysis" } }
+            }
+        });
+    }
+
+    // Form submission handler
+    document.getElementById("planForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        let planId = document.getElementById("planId").value;
+        let newPlan = {
+            name: document.getElementById("planName").value,
+            price: parseInt(document.getElementById("planPrice").value),
+            data: document.getElementById("planData").value,
+            validity: document.getElementById("planValidity").value,
+            category: document.getElementById("planCategory").value,
+            active: true
+        };
+        if (planId) {
+            for (let i = 0; i < plans.length; i++) {
+                if (plans[i].id === parseInt(planId)) {
+                    plans[i] = { id: plans[i].id, ...newPlan };
+                    showMessage("Plan changed!", "success");
+                    break;
+                }
+            }
+        } else {
+            let newId = plans.length > 0 ? plans[plans.length - 1].id + 1 : 1;
+            plans.push({ id: newId, ...newPlan });
+            showMessage("New plan added!", "success");
+        }
+        closePlanModal();
+        showPlans();
+        updateChart();
+        savePlansToStorage();
+    });
+
+    // Page load initialization
+    document.addEventListener("DOMContentLoaded", function() {
+        showPlans();
+        showExpiringPlans();
+        updateChart();
+        savePlansToStorage();
+    });
+    </script>
+</body>
+</html>
